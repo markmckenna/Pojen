@@ -1,0 +1,35 @@
+package ${packageName};
+
+final class ${className}Impl extends ${className} {
+    // Properties and property accessors
+  #foreach($property in $properties)
+    // TODO: wrap known mutable types (i.e. Collection instances) in immutable wrappers
+    private final ${property.type} ${property.name};
+    @Override public ${property.type} ${property.accessorName}() { return ${property.name}; }
+  #end
+
+    // package-scoped POJO constructor
+    ${className}Impl(final ${className}.Builder builder) {
+      #foreach($property in $properties)
+        // TODO: Properly implement optional properties
+        this.${property.name} = builder.${property.name};
+      #end
+    }
+
+    public static class BuilderImpl implements ${className}.Builder {
+        BuilderImpl() {}
+
+        // Temporary properties in Builder instance
+        // TODO: Support default (null-safe) property values; be null-safe by default
+      #foreach($property in $properties)
+        ${property.type} ${property.name};
+        @Override public Builder ${property.name}(final ${property.type} ${property.name}) {
+            this.${property.name} = ${property.name};
+            return this;
+        }
+      #end
+    }
+
+    // Public Builder instantiator (used by PojoInjector)
+    public static ${className}.Builder builder() { return new BuilderImpl(); }
+}
